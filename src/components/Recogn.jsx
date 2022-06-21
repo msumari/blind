@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import mic from "/mic.svg";
-import com from "./Commands";
+import com from "../Commands";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
