@@ -25,21 +25,32 @@ function Upload() {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
         setPercent(percent);
-      },
-      async () => {
-        await getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          console.log(url);
-        });
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "cancel":
+            console.log("Upload is canceled");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+        }
       },
       (err) => {
-        console.log(err),
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              console.log(url);
-            });
-          };
+        console.log(err);
+        alert(err);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+        });
       }
     );
+  };
+
+  const cancelUpload = () => {
+    uploadTask.cancel();
   };
 
   return (
@@ -50,6 +61,11 @@ function Upload() {
         Upload Notes
       </button>
       <p>{percent} "% done"</p>
+      {100 > percent > 0 && (
+        <button onClick={cancelUpload} className="bg-red-600 rounded p-2 ">
+          Cancel Upload
+        </button>
+      )}
     </div>
   );
 }
